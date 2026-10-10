@@ -19,7 +19,7 @@ do
             check_result=$(python3 check.py)
             
             if [ "$check_result" = "Проверка не пройдена." ]; then
-                echo "Ошибка обнаружена при параметрах -> Размер: ${size}x${size}, Потоков: ${threads}"
+                echo "Ошибка обнаружена при: Размер: ${size}x${size}, Потоков: ${threads}"
                 exit 1
             fi
         done
