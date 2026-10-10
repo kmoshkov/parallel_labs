@@ -5,6 +5,14 @@
 
 ---
 
+## Структура проекта
+- [main.cpp](main.cpp) - основной код программы(В нём реализованы генерация файла с матрицей, чтение и сохранение в файл) матриц).
+- [check.py](check.py) - Скрипт для проверки верности перемножения матриц.
+- [requirements.txt](requirements.txt) - список зависимостей для Python.
+- [test_data.sh](test_data.sh) - bash-скрипт для сбора данных для статистики
+
+---
+
 ## Алгоритм
 ```cpp
 #pragma omp parallel for shared(first, second, result)
