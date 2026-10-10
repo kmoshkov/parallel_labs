@@ -5,6 +5,7 @@
 #include <random>
 #include <string>
 #include <vector>
+#include <omp.h>
 
 using Matrix = std::vector<std::vector<double>>;
 
@@ -97,17 +98,28 @@ void Multiply(
 ) {
     const size_t size = first.size();
 
+    #pragma omp parallel for shared(first, second, result)
     for (size_t i = 0; i < size; ++i) {
         for (size_t k = 0; k < size; ++k) {
+            double a = first[i][k];
             for (size_t j = 0; j < size; ++j) {
-                result[i][j] += first[i][k] * second[k][j];
+                result[i][j] += a * second[k][j];
             }
         }
     }
 }
 
-int main() {
-    const size_t size = 1000;
+
+int main(int argc, char* argv[]) {
+    size_t size = 1000;
+    int num_threads = 4;
+
+    if (argc >= 3) {
+        size = std::stoi(argv[1]);
+        num_threads = std::stoi(argv[2]);
+    }
+
+    omp_set_num_threads(num_threads);
 
     const std::string first_matrix_file = "matrix_a.txt";
     const std::string second_matrix_file = "matrix_b.txt";
@@ -148,21 +160,11 @@ int main() {
     const double operations = 2.0 * size * size * size;
     const double gflops = operations / (time * 1e9);
 
-    std::cout << "Размер матриц: "
-              << size << " x " << size << '\n';
-
-    std::cout << "Время умножения: "
-              << std::fixed << std::setprecision(6)
-              << time << " секунд\n";
-
-    std::cout << "Количество операций: "
-              << std::fixed << std::setprecision(0)
-              << operations << " FLOP\n";
-
-    std::cout << "Производительность: "
-              << std::fixed << std::setprecision(4)
-              << gflops << " GFLOPS\n";
+    std::cout << size << ";"
+              << num_threads << ";"
+              << std::fixed << std::setprecision(6) << time << ";"
+              << std::fixed << std::setprecision(0) << operations << ";"
+              << std::fixed << std::setprecision(4) << gflops << '\n';
 
     return 0;
 }
-
