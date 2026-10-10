@@ -8,13 +8,12 @@
 
 using Matrix = std::vector<std::vector<double>>;
 
-void generate_matrix(const std::string& filename, size_t size) {
+bool GenerateMatrix(const std::string& filename, size_t size) {
     std::ofstream output(filename);
 
     if (!output.is_open()) {
-        std::cerr << "Ошибка: не удалось создать файл "
-                  << filename << '\n';
-        return;
+        std::cerr << "Ошибка: не удалось создать файл " << filename << '\n';
+        return false;
     }
 
     std::random_device rd;
@@ -34,6 +33,7 @@ void generate_matrix(const std::string& filename, size_t size) {
 
         output << '\n';
     }
+    return true;
 }
 
 bool LoadMatrix(
@@ -44,8 +44,7 @@ bool LoadMatrix(
     std::ifstream input(file_name);
 
     if (!input) {
-        std::cerr << "Ошибка: не удалось открыть файл "
-                  << file_name << '\n';
+        std::cerr << "Ошибка: не удалось открыть файл " << file_name << '\n';
         return false;
     }
 
@@ -70,8 +69,7 @@ bool SaveMatrix(
     std::ofstream output(file_name);
 
     if (!output) {
-        std::cerr << "Ошибка: не удалось создать файл "
-                  << file_name << '\n';
+        std::cerr << "Ошибка: не удалось создать файл " << file_name << '\n';
         return false;
     }
 
@@ -100,8 +98,8 @@ void Multiply(
     const size_t size = first.size();
 
     for (size_t i = 0; i < size; ++i) {
-        for (size_t j = 0; j < size; ++j) {
-            for (size_t k = 0; k < size; ++k) {
+        for (size_t k = 0; k < size; ++k) {
+            for (size_t j = 0; j < size; ++j) {
                 result[i][j] += first[i][k] * second[k][j];
             }
         }
@@ -115,8 +113,8 @@ int main() {
     const std::string second_matrix_file = "matrix_b.txt";
     const std::string result_matrix_file = "result.txt";
 
-    generate_matrix(first_matrix_file, size);
-    generate_matrix(second_matrix_file, size);
+    GenerateMatrix(first_matrix_file, size);
+    GenerateMatrix(second_matrix_file, size);
 
     Matrix matrix_a;
     Matrix matrix_b;
